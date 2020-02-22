@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Oscillator</title>
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <link rel="icon" type="image/png" sizes="174x174" href="./favicon.png" />
+
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+    <script src="node_modules/tone/build/Tone.js"></script>
+    <script src="node_modules/@tonejs/ui/build/tonejs-ui.js"></script>
+    <script src="astronomy.js"></script>
+    <style type="text/css">
+      tone-play-toggle {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <tone-content>
+      <div id="mercury"></div>
+      <div id="venus"></div>
+      <div id="mars"></div>
+
+      <div id="jupiter"></div>
+      <div id="saturn"></div>
+      <div id="uranus"></div>
+      <div id="neptune"></div>
+    </tone-content>
+
+    <tone-content>
+      <tone-play-toggle id="osc1-toggle"></tone-play-toggle>
+      <tone-oscillator id="osc1" label="Mercury" frequency></tone-oscillator>
+    </tone-content>
+
+    <tone-content>
+      <tone-play-toggle id="osc2-toggle"></tone-play-toggle>
+      <tone-oscillator id="osc2" label="Venus" frequency></tone-oscillator>
+    </tone-content>
+
+    <tone-content>
+      <tone-play-toggle id="osc3-toggle"></tone-play-toggle>
+      <tone-oscillator id="osc3" label="Mars" frequency></tone-oscillator>
+    </tone-content>
+
+    <tone-content>
+      <tone-play-toggle id="osc4-toggle"></tone-play-toggle>
+      <tone-oscillator id="osc4" label="Jupiter" frequency></tone-oscillator>
+    </tone-content>
+
+    <tone-content>
+      <tone-play-toggle id="osc5-toggle"></tone-play-toggle>
+      <tone-oscillator id="osc5" label="Saturn" frequency></tone-oscillator>
+    </tone-content>
+
+    <tone-content>
+      <tone-play-toggle id="osc6-toggle"></tone-play-toggle>
+      <tone-oscillator id="osc6" label="Uranus" frequency></tone-oscillator>
+    </tone-content>
+
+    <tone-content>
+      <tone-play-toggle id="osc7-toggle"></tone-play-toggle>
+      <tone-oscillator id="osc7" label="Neptune" frequency></tone-oscillator>
+    </tone-content>
+
+    <script type="text/javascript">
+      var osc1 = new Tone.Oscillator({
+        type: "sine",
+        frequency: 400,
+        volume: -16
+      }).toMaster();
+
+      var osc2 = new Tone.Oscillator({
+        type: "sine",
+        frequency: 400,
+        volume: -16
+      }).toMaster();
+
+      var osc3 = new Tone.Oscillator({
+        type: "sine",
+        frequency: 400,
+        volume: -16
+      }).toMaster();
+
+      var osc4 = new Tone.Oscillator({
+        type: "sine",
+        frequency: 400,
+        volume: -16
+      }).toMaster();
+
+      var osc5 = new Tone.Oscillator({
+        type: "sine",
+        frequency: 400,
+        volume: -16
+      }).toMaster();
+
+      var osc6 = new Tone.Oscillator({
+        type: "sine",
+        frequency: 400,
+        volume: -16
+      }).toMaster();
+
+      var osc7 = new Tone.Oscillator({
+        type: "sine",
+        frequency: 400,
+        volume: -16
+      }).toMaster();
+
+      function getPlanetFrequency(planet) {
+        const planetFrequency = (planet + "").slice(1, 4);
+        console.log(planetFrequency);
+
+        return planet;
+      }
+
+      function updateFrequences() {
+        let frequencies = getFrequencies();
+
+        osc1.frequency.value = frequencies.mercury;
+        osc2.frequency.value = frequencies.venus;
+        osc3.frequency.value = frequencies.mars;
+        osc4.frequency.value = frequencies.jupiter;
+        osc5.frequency.value = frequencies.saturn;
+        osc6.frequency.value = frequencies.uranus;
+        osc7.frequency.value = frequencies.neptune;
+
+        let mercuryFreqDisplay = document.getElementById("mercury");
+        let venusFreqDisplay = document.getElementById("venus");
+        let marsFreqDisplay = document.getElementById("mars");
+        let jupiterFreqDisplay = document.getElementById("jupiter");
+        let saturnFreqDisplay = document.getElementById("saturn");
+        let uranusFreqDisplay = document.getElementById("uranus");
+        let neptuneFreqDisplay = document.getElementById("neptune");
+
+        mercuryFreqDisplay.innerText = "Mercury " + frequencies.mercury;
+        venusFreqDisplay.innerText = "Venus: " + frequencies.venus;
+        marsFreqDisplay.innerText = "Mars: " + frequencies.mars;
+        jupiterFreqDisplay.innerText = "Jupiter: " + frequencies.jupiter;
+        saturnFreqDisplay.innerText = "Saturn: " + frequencies.saturn;
+        uranusFreqDisplay.innerText = "Uranus: " + frequencies.uranus;
+        neptuneFreqDisplay.innerText = "Neptune: " + frequencies.neptune;
+      }
+
+      setInterval(updateFrequences, 10);
+
+      //bind the interface
+      document.getElementById("osc1").bind(osc1);
+      document.getElementById("osc2").bind(osc2);
+      document.getElementById("osc3").bind(osc3);
+      document.getElementById("osc4").bind(osc4);
+      document.getElementById("osc5").bind(osc5);
+      document.getElementById("osc6").bind(osc6);
+      document.getElementById("osc7").bind(osc7);
+
+      document.getElementById("osc1-toggle").bind(osc1);
+      document.getElementById("osc2-toggle").bind(osc2);
+      document.getElementById("osc3-toggle").bind(osc3);
+      document.getElementById("osc4-toggle").bind(osc4);
+      document.getElementById("osc5-toggle").bind(osc5);
+      document.getElementById("osc6-toggle").bind(osc6);
+      document.getElementById("osc7-toggle").bind(osc7);
+    </script>
+  </body>
+</html>

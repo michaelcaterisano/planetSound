@@ -2249,6 +2249,8 @@ function GeographicCoordinates(
 
 */
 
+// CUTLET CODE
+
 const Astronomy = new AstronomyClass();
 
 function getPlanetDistances(day) {
@@ -2309,17 +2311,16 @@ function daysSince2000(date1, date2) {
 // need days since jan 1 2000 in decimal to 3 digits
 
 // PRINT PLANET DISTANCES
-function printDistances() {
+function getFrequencies() {
   const y2k = new Date(2000, 0, 1);
   const today = new Date();
   const days = daysSince2000(y2k, today);
-  const planetDistances = getPlanetDistances(days);
-  console.log(`Mercury: ${planetDistances.mercury}`);
-  return planetDistances;
+  const frequences = getPlanetDistances(days);
+  return frequences;
 }
 
 // setInterval(printDistances, 10);
 
 module.exports = {
-  printDistances: printDistances
+  getFrequencies: getFrequencies
 };
