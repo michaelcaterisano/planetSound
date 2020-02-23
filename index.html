@@ -22,14 +22,23 @@
   </head>
   <body>
     <tone-content>
+      <div id="earth"></div>
+
       <div id="mercury"></div>
       <div id="venus"></div>
+      <div id="sun"></div>
+
       <div id="mars"></div>
 
       <div id="jupiter"></div>
       <div id="saturn"></div>
       <div id="uranus"></div>
       <div id="neptune"></div>
+    </tone-content>
+
+    <tone-content>
+      <tone-play-toggle id="osc8-toggle"></tone-play-toggle>
+      <tone-oscillator id="osc8" label="Earth" frequency></tone-oscillator>
     </tone-content>
 
     <tone-content>
@@ -40,6 +49,11 @@
     <tone-content>
       <tone-play-toggle id="osc2-toggle"></tone-play-toggle>
       <tone-oscillator id="osc2" label="Venus" frequency></tone-oscillator>
+    </tone-content>
+
+    <tone-content>
+      <tone-play-toggle id="osc9-toggle"></tone-play-toggle>
+      <tone-oscillator id="osc9" label="Sun" frequency></tone-oscillator>
     </tone-content>
 
     <tone-content>
@@ -110,6 +124,18 @@
         volume: -16
       }).toMaster();
 
+      var osc8 = new Tone.Oscillator({
+        type: "sine",
+        frequency: 400,
+        volume: -16
+      }).toMaster();
+
+      var osc9 = new Tone.Oscillator({
+        type: "sine",
+        frequency: 400,
+        volume: -16
+      }).toMaster();
+
       function getPlanetFrequency(planet) {
         const planetFrequency = (planet + "").slice(1, 4);
         console.log(planetFrequency);
@@ -127,6 +153,8 @@
         osc5.frequency.value = frequencies.saturn;
         osc6.frequency.value = frequencies.uranus;
         osc7.frequency.value = frequencies.neptune;
+        osc8.frequency.value = frequencies.earth;
+        osc9.frequency.value = frequencies.sun;
 
         let mercuryFreqDisplay = document.getElementById("mercury");
         let venusFreqDisplay = document.getElementById("venus");
@@ -135,14 +163,19 @@
         let saturnFreqDisplay = document.getElementById("saturn");
         let uranusFreqDisplay = document.getElementById("uranus");
         let neptuneFreqDisplay = document.getElementById("neptune");
+        let earthFreqDisplay = document.getElementById("earth");
+        let sunFreqDisplay = document.getElementById("sun");
 
-        mercuryFreqDisplay.innerText = "Mercury " + frequencies.mercury;
-        venusFreqDisplay.innerText = "Venus: " + frequencies.venus;
-        marsFreqDisplay.innerText = "Mars: " + frequencies.mars;
-        jupiterFreqDisplay.innerText = "Jupiter: " + frequencies.jupiter;
-        saturnFreqDisplay.innerText = "Saturn: " + frequencies.saturn;
-        uranusFreqDisplay.innerText = "Uranus: " + frequencies.uranus;
-        neptuneFreqDisplay.innerText = "Neptune: " + frequencies.neptune;
+        earthFreqDisplay.innerText = "Earth (Hz): " + frequencies.earth;
+        sunFreqDisplay.innerText = "Sun (Hz): " + frequencies.sun;
+
+        mercuryFreqDisplay.innerText = "Mercury (Hz): " + frequencies.mercury;
+        venusFreqDisplay.innerText = "Venus (Hz):" + frequencies.venus;
+        marsFreqDisplay.innerText = "Mars (Hz): " + frequencies.mars;
+        jupiterFreqDisplay.innerText = "Jupiter (Hz): " + frequencies.jupiter;
+        saturnFreqDisplay.innerText = "Saturn (Hz): " + frequencies.saturn;
+        uranusFreqDisplay.innerText = "Uranus (Hz): " + frequencies.uranus;
+        neptuneFreqDisplay.innerText = "Neptune (Hz): " + frequencies.neptune;
       }
 
       setInterval(updateFrequences, 10);
@@ -155,6 +188,8 @@
       document.getElementById("osc5").bind(osc5);
       document.getElementById("osc6").bind(osc6);
       document.getElementById("osc7").bind(osc7);
+      document.getElementById("osc8").bind(osc8);
+      document.getElementById("osc9").bind(osc9);
 
       document.getElementById("osc1-toggle").bind(osc1);
       document.getElementById("osc2-toggle").bind(osc2);
@@ -163,6 +198,8 @@
       document.getElementById("osc5-toggle").bind(osc5);
       document.getElementById("osc6-toggle").bind(osc6);
       document.getElementById("osc7-toggle").bind(osc7);
+      document.getElementById("osc8-toggle").bind(osc8);
+      document.getElementById("osc9-toggle").bind(osc9);
     </script>
   </body>
 </html>

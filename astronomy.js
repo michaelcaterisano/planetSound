@@ -2251,7 +2251,36 @@ function GeographicCoordinates(
 
 // CUTLET CODE
 
+const NEPTUNE_MAX = 5000000000;
+const HZ_MIN = 100;
+const HZ_MAX = 2000;
+
 const Astronomy = new AstronomyClass();
+
+function scale(value, inMin, inMax, outMin, outMax) {
+  return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+}
+
+function AUtoKM(au) {
+  return au * 149597900;
+}
+
+function objectMap(object, mapFn) {
+  return Object.keys(object).reduce(function(result, key) {
+    result[key] = mapFn(object[key]);
+    return result;
+  }, {});
+}
+
+function getFrequency(distance) {
+  const distanceKM = AUtoKM(distance);
+  return scale(distanceKM, 0, NEPTUNE_MAX, HZ_MIN, HZ_MAX);
+}
+
+function getPlanetFrequencies(planets) {
+  const planetFrequencies = objectMap(planets, getFrequency);
+  return planetFrequencies;
+}
 
 function getPlanetDistances(day) {
   const mercuryDistance = Astronomy.Mercury.DistanceFromEarth(day);
@@ -2261,36 +2290,22 @@ function getPlanetDistances(day) {
   const saturnDistance = Astronomy.Saturn.DistanceFromEarth(day);
   const uranusDistance = Astronomy.Uranus.DistanceFromEarth(day);
   const neptuneDistance = Astronomy.Neptune.DistanceFromEarth(day);
+  const sunDistance = Astronomy.Sun.DistanceFromEarth(day);
 
   const planets = {
+    earth: 0,
     mercury: mercuryDistance,
     venus: venusDistance,
     mars: marsDistance,
     jupiter: jupiterDistance,
     saturn: saturnDistance,
     uranus: uranusDistance,
-    neptune: neptuneDistance
+    neptune: neptuneDistance,
+    sun: sunDistance
   };
 
-  function AUtoKM(au) {
-    return (au * 149597900) / 1000000;
-  }
-
-  function objectMap(object, mapFn) {
-    return Object.keys(object).reduce(function(result, key) {
-      result[key] = mapFn(object[key]);
-      return result;
-    }, {});
-  }
-
-  const planetDistancesKM = objectMap(planets, AUtoKM);
+  const planetDistancesKM = getPlanetFrequencies(planets);
   return planetDistancesKM;
-}
-
-function getCurrentSeconds() {
-  var dt = new Date();
-  var secs = dt.getSeconds() + 60 * (dt.getMinutes() + 60 * dt.getHours());
-  return secs;
 }
 
 function daysSince2000(date1, date2) {
@@ -2311,12 +2326,13 @@ function daysSince2000(date1, date2) {
 // need days since jan 1 2000 in decimal to 3 digits
 
 // PRINT PLANET DISTANCES
+
 function getFrequencies() {
   const y2k = new Date(2000, 0, 1);
   const today = new Date();
   const days = daysSince2000(y2k, today);
-  const frequences = getPlanetDistances(days);
-  return frequences;
+  const frequencies = getPlanetDistances(days);
+  return frequencies;
 }
 
 // setInterval(printDistances, 10);
