@@ -25,13 +25,13 @@
       #channels-container {
         display: flex;
         flex-wrap: wrap;
-        min-width: 600px;
+        justify-content: space-around;
+        max-width: 600px;
       }
       #planet-container {
-        width: 200px;
       }
       tone-play-toggle {
-        width: 600px !important;
+        width: 100%;
       }
 
       #planet-container tone-channel {
@@ -48,9 +48,9 @@
     </tone-content>
 
     <tone-content>
-      <tone-play-toggle></tone-play-toggle>
-
       <div id="channels-container">
+        <tone-play-toggle></tone-play-toggle>
+
         <div id="planet-container">
           <div id="earth" class="frequency-label"></div>
 
