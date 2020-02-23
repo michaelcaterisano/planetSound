@@ -2335,8 +2335,6 @@ function getFrequencies() {
   return frequencies;
 }
 
-// setInterval(printDistances, 10);
-
 module.exports = {
   getFrequencies: getFrequencies
 };

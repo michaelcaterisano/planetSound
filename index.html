@@ -21,185 +21,175 @@
     </style>
   </head>
   <body>
+    <style>
+      #channels-container {
+        display: flex;
+        flex-wrap: wrap;
+        min-width: 600px;
+      }
+      #planet-container {
+        width: 200px;
+      }
+      tone-play-toggle {
+        width: 600px !important;
+      }
+
+      #planet-container tone-channel {
+        flex-grow: 1;
+        width: 100%;
+      }
+      .frequency-label {
+        margin: 10px;
+      }
+    </style>
     <tone-content>
-      <div id="earth"></div>
-
-      <div id="mercury"></div>
-      <div id="venus"></div>
-      <div id="sun"></div>
-
-      <div id="mars"></div>
-
-      <div id="jupiter"></div>
-      <div id="saturn"></div>
-      <div id="uranus"></div>
-      <div id="neptune"></div>
+      <!-- <div id="mercury"></div> -->
+      <!-- <div id="venus"></div> -->
     </tone-content>
 
     <tone-content>
-      <tone-play-toggle id="osc8-toggle"></tone-play-toggle>
-      <tone-oscillator id="osc8" label="Earth" frequency></tone-oscillator>
-    </tone-content>
+      <tone-play-toggle></tone-play-toggle>
 
-    <tone-content>
-      <tone-play-toggle id="osc1-toggle"></tone-play-toggle>
-      <tone-oscillator id="osc1" label="Mercury" frequency></tone-oscillator>
-    </tone-content>
+      <div id="channels-container">
+        <div id="planet-container">
+          <div id="earth" class="frequency-label"></div>
 
-    <tone-content>
-      <tone-play-toggle id="osc2-toggle"></tone-play-toggle>
-      <tone-oscillator id="osc2" label="Venus" frequency></tone-oscillator>
-    </tone-content>
+          <tone-channel label="earth" id="earth-channel"></tone-channel>
+        </div>
+        <div id="planet-container">
+          <div id="mercury" class="frequency-label"></div>
+          <tone-channel label="mercury" id="mercury-channel"></tone-channel>
+        </div>
+        <div id="planet-container">
+          <div id="venus" class="frequency-label"></div>
+          <tone-channel label="venus" id="venus-channel"></tone-channel>
+        </div>
+        <div id="planet-container">
+          <div id="sun" class="frequency-label"></div>
+          <tone-channel label="sun" id="sun-channel"></tone-channel>
+        </div>
+        <div id="planet-container">
+          <div id="mars" class="frequency-label"></div>
+          <tone-channel label="mars" id="mars-channel"></tone-channel>
+        </div>
+        <div id="planet-container">
+          <div id="jupiter" class="frequency-label"></div>
+          <tone-channel label="jupiter" id="jupiter-channel"></tone-channel>
+        </div>
+        <div id="planet-container">
+          <div id="saturn" class="frequency-label"></div>
+          <tone-channel label="saturn" id="saturn-channel"></tone-channel>
+        </div>
+        <div id="planet-container">
+          <div id="uranus" class="frequency-label"></div>
+          <tone-channel label="uranus" id="uranus-channel"></tone-channel>
+        </div>
+        <div id="planet-container">
+          <div id="neptune" class="frequency-label"></div>
+          <tone-channel label="neptune" id="neptune-channel"></tone-channel>
+        </div>
+      </div>
 
-    <tone-content>
-      <tone-play-toggle id="osc9-toggle"></tone-play-toggle>
-      <tone-oscillator id="osc9" label="Sun" frequency></tone-oscillator>
-    </tone-content>
-
-    <tone-content>
-      <tone-play-toggle id="osc3-toggle"></tone-play-toggle>
-      <tone-oscillator id="osc3" label="Mars" frequency></tone-oscillator>
-    </tone-content>
-
-    <tone-content>
-      <tone-play-toggle id="osc4-toggle"></tone-play-toggle>
-      <tone-oscillator id="osc4" label="Jupiter" frequency></tone-oscillator>
-    </tone-content>
-
-    <tone-content>
-      <tone-play-toggle id="osc5-toggle"></tone-play-toggle>
-      <tone-oscillator id="osc5" label="Saturn" frequency></tone-oscillator>
-    </tone-content>
-
-    <tone-content>
-      <tone-play-toggle id="osc6-toggle"></tone-play-toggle>
-      <tone-oscillator id="osc6" label="Uranus" frequency></tone-oscillator>
-    </tone-content>
-
-    <tone-content>
-      <tone-play-toggle id="osc7-toggle"></tone-play-toggle>
-      <tone-oscillator id="osc7" label="Neptune" frequency></tone-oscillator>
+      <!-- <tone-channel label="mercury" id="mercury"></tone-channel>
+      <tone-channel label="venus" id="venus"></tone-channel> -->
     </tone-content>
 
     <script type="text/javascript">
-      var osc1 = new Tone.Oscillator({
-        type: "sine",
-        frequency: 400,
-        volume: -16
-      }).toMaster();
-
-      var osc2 = new Tone.Oscillator({
-        type: "sine",
-        frequency: 400,
-        volume: -16
-      }).toMaster();
-
-      var osc3 = new Tone.Oscillator({
-        type: "sine",
-        frequency: 400,
-        volume: -16
-      }).toMaster();
-
-      var osc4 = new Tone.Oscillator({
-        type: "sine",
-        frequency: 400,
-        volume: -16
-      }).toMaster();
-
-      var osc5 = new Tone.Oscillator({
-        type: "sine",
-        frequency: 400,
-        volume: -16
-      }).toMaster();
-
-      var osc6 = new Tone.Oscillator({
-        type: "sine",
-        frequency: 400,
-        volume: -16
-      }).toMaster();
-
-      var osc7 = new Tone.Oscillator({
-        type: "sine",
-        frequency: 400,
-        volume: -16
-      }).toMaster();
-
-      var osc8 = new Tone.Oscillator({
-        type: "sine",
-        frequency: 400,
-        volume: -16
-      }).toMaster();
-
-      var osc9 = new Tone.Oscillator({
-        type: "sine",
-        frequency: 400,
-        volume: -16
-      }).toMaster();
-
-      function getPlanetFrequency(planet) {
-        const planetFrequency = (planet + "").slice(1, 4);
-        console.log(planetFrequency);
-
-        return planet;
+      // HELPER FUNCTIONS
+      function makeChannel(name, osc) {
+        const channel = new Tone.Channel({ volume: -25 }).toMaster();
+        osc.chain(channel);
+        //bind the UI
+        document.querySelector(`#${name}-channel`).bind(channel);
       }
 
-      function updateFrequences() {
+      function makeFreqDisplay(name, frequency) {
+        let node = document.querySelector(`#${name}`);
+        node.innerText = `${frequency}`;
+      }
+
+      function updateFrequencies() {
+        // function imported from astronomy.js
         let frequencies = getFrequencies();
-
-        osc1.frequency.value = frequencies.mercury;
-        osc2.frequency.value = frequencies.venus;
-        osc3.frequency.value = frequencies.mars;
-        osc4.frequency.value = frequencies.jupiter;
-        osc5.frequency.value = frequencies.saturn;
-        osc6.frequency.value = frequencies.uranus;
-        osc7.frequency.value = frequencies.neptune;
-        osc8.frequency.value = frequencies.earth;
-        osc9.frequency.value = frequencies.sun;
-
-        let mercuryFreqDisplay = document.getElementById("mercury");
-        let venusFreqDisplay = document.getElementById("venus");
-        let marsFreqDisplay = document.getElementById("mars");
-        let jupiterFreqDisplay = document.getElementById("jupiter");
-        let saturnFreqDisplay = document.getElementById("saturn");
-        let uranusFreqDisplay = document.getElementById("uranus");
-        let neptuneFreqDisplay = document.getElementById("neptune");
-        let earthFreqDisplay = document.getElementById("earth");
-        let sunFreqDisplay = document.getElementById("sun");
-
-        earthFreqDisplay.innerText = "Earth (Hz): " + frequencies.earth;
-        sunFreqDisplay.innerText = "Sun (Hz): " + frequencies.sun;
-
-        mercuryFreqDisplay.innerText = "Mercury (Hz): " + frequencies.mercury;
-        venusFreqDisplay.innerText = "Venus (Hz):" + frequencies.venus;
-        marsFreqDisplay.innerText = "Mars (Hz): " + frequencies.mars;
-        jupiterFreqDisplay.innerText = "Jupiter (Hz): " + frequencies.jupiter;
-        saturnFreqDisplay.innerText = "Saturn (Hz): " + frequencies.saturn;
-        uranusFreqDisplay.innerText = "Uranus (Hz): " + frequencies.uranus;
-        neptuneFreqDisplay.innerText = "Neptune (Hz): " + frequencies.neptune;
+        const planetNames = Object.keys(frequencies);
+        for (let i = 0; i < planetNames.length; i++) {
+          let planet = planetNames[i];
+          let frequency = frequencies[planet];
+          makeFreqDisplay(planet, frequency);
+        }
+        earthOscillator.frequency.value = frequencies["earth"];
+        mercuryOscillator.frequency.value = frequencies["mercury"];
+        venusOscillator.frequency.value = frequencies["venus"];
+        sunOscillator.frequency.value = frequencies["sun"];
+        marsOscillator.frequency.value = frequencies["mars"];
+        jupiterOscillator.frequency.value = frequencies["jupiter"];
+        saturnOscillator.frequency.value = frequencies["saturn"];
+        uranusOscillator.frequency.value = frequencies["uranus"];
+        neptuneOscillator.frequency.value = frequencies["neptune"];
       }
 
-      setInterval(updateFrequences, 10);
+      // CREATE OSCILLATORS
+      let earthOscillator = new Tone.Oscillator({
+        type: "sine"
+      })
+        .sync()
+        .start(0);
+      let mercuryOscillator = new Tone.Oscillator({
+        type: "sine"
+      })
+        .sync()
+        .start(0);
+      let venusOscillator = new Tone.Oscillator({
+        type: "sine"
+      })
+        .sync()
+        .start(0);
+      let marsOscillator = new Tone.Oscillator({
+        type: "sine"
+      })
+        .sync()
+        .start(0);
+      let jupiterOscillator = new Tone.Oscillator({
+        type: "sine"
+      })
+        .sync()
+        .start(0);
+      let saturnOscillator = new Tone.Oscillator({
+        type: "sine"
+      })
+        .sync()
+        .start(0);
+      let uranusOscillator = new Tone.Oscillator({
+        type: "sine"
+      })
+        .sync()
+        .start(0);
+      let neptuneOscillator = new Tone.Oscillator({
+        type: "sine"
+      })
+        .sync()
+        .start(0);
+      let sunOscillator = new Tone.Oscillator({
+        type: "sine"
+      })
+        .sync()
+        .start(0);
 
-      //bind the interface
-      document.getElementById("osc1").bind(osc1);
-      document.getElementById("osc2").bind(osc2);
-      document.getElementById("osc3").bind(osc3);
-      document.getElementById("osc4").bind(osc4);
-      document.getElementById("osc5").bind(osc5);
-      document.getElementById("osc6").bind(osc6);
-      document.getElementById("osc7").bind(osc7);
-      document.getElementById("osc8").bind(osc8);
-      document.getElementById("osc9").bind(osc9);
+      // CREATE THE CHANNELS
+      makeChannel("earth", earthOscillator);
+      makeChannel("mercury", mercuryOscillator);
+      makeChannel("venus", venusOscillator);
+      makeChannel("sun", sunOscillator);
+      makeChannel("mars", marsOscillator);
+      makeChannel("jupiter", jupiterOscillator);
+      makeChannel("saturn", saturnOscillator);
+      makeChannel("uranus", uranusOscillator);
+      makeChannel("neptune", neptuneOscillator);
 
-      document.getElementById("osc1-toggle").bind(osc1);
-      document.getElementById("osc2-toggle").bind(osc2);
-      document.getElementById("osc3-toggle").bind(osc3);
-      document.getElementById("osc4-toggle").bind(osc4);
-      document.getElementById("osc5-toggle").bind(osc5);
-      document.getElementById("osc6-toggle").bind(osc6);
-      document.getElementById("osc7-toggle").bind(osc7);
-      document.getElementById("osc8-toggle").bind(osc8);
-      document.getElementById("osc9-toggle").bind(osc9);
+      // BIND THE TOGGLE BUTTON
+      document.querySelector("tone-play-toggle").bind(Tone.Transport);
+
+      setInterval(updateFrequencies, 10);
     </script>
   </body>
 </html>
