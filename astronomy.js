@@ -2350,7 +2350,7 @@ function getFrequencies(dayCount) {
 
 function getDistanceKM(name) {
   const distance = AUtoKM(planets[name]);
-
+  console.log(`${name}: ${distance}`);
   return distance;
 }
 
