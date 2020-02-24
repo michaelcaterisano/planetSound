@@ -57,6 +57,9 @@
         width: 100%;
         margin-bottom: 10px;
       }
+      tone-explanation {
+        text-align: center;
+      }
     </style>
     <tone-content>
       <!-- <div id="mercury"></div> -->
@@ -64,11 +67,13 @@
     </tone-content>
 
     <tone-content>
-      <div id="date-container">
-        <span>Planet distances from Earth on </span><br />
+      <tone-explanation label="Planet Sound"
+        ><span>Planet distances from Earth on </span><br />
         <strong><span id="date"></span></strong><br />
-        <span> represented as sound from 430Hz to 3520Hz</span>
-      </div>
+        <span>
+          represented as sound from 430Hz to 3520Hz</span
+        ></tone-explanation
+      >
       <div id="channels-container">
         <tone-play-toggle></tone-play-toggle>
         <tone-slider
