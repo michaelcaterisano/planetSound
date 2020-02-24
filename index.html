@@ -114,8 +114,8 @@
       let days = daysSince(y2k, date);
       let dateNode = (document.querySelector(
         "#date"
-      ).innerText = `Year: ${date.getFullYear()} Month: ${date.getMonth() +
-        1} Day: ${date.getDate()}`);
+      ).innerText = `Planet distances on ${date.getFullYear()}-${date.getMonth() +
+        1}-${date.getDate()}`);
 
       // HELPER FUNCTIONS
       function daysSince(date1, date2) {
@@ -140,14 +140,19 @@
         document.querySelector(`#${name}-channel`).bind(channel);
       }
 
+      function numberWithCommas(x) {
+        console.log(x);
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
       function makeFreqDisplay(name, frequency) {
-        if (name === "earth") {
-          let node = document.querySelector(`#${name}`);
-          node.innerText = `distance: ${frequency} km`;
-          return;
-        }
+        // if (name === "earth") {
+        //   let node = document.querySelector(`#${name}`);
+        //   node.innerText = `${frequency} km`;
+        //   return;
+        // }f
         let node = document.querySelector(`#${name}`);
-        node.innerText = `distance: ${frequency}Bil.km`;
+        node.innerText = `${frequency} km`;
       }
 
       /*** THE MEAT ***/
@@ -156,25 +161,30 @@
         days = daysSince(y2k, date);
 
         /*** CONTROL SPEED THROUGH TIME HERE ***/
+
+        //normal speed
         let now = new Date();
-        // date.setDate(date.getDate() + 1);
         date = now;
+
+        // fast
+        // date.setDate(date.getDate() + 1); // alternatively move through time one day per function call
 
         // update date in UI
         document.querySelector(
           "#date"
-        ).innerText = `Year: ${date.getFullYear()} Month: ${date.getMonth() +
-          1} Day: ${date.getDate()}`;
+        ).innerText = `Planet distances on ${date.getFullYear()}-${date.getMonth() +
+          1}-${date.getDate()}`;
 
         // get array of planet names
         const planetNames = Object.keys(frequencies);
 
-        // update each planet distance display
+        // update each planet distance in UI
         for (let i = 0; i < planetNames.length; i++) {
           let planet = planetNames[i];
-          //let frequency = frequencies[planet];
-          let distance = getDistanceKM(planet);
-          makeFreqDisplay(planet, distance);
+          //let frequency = frequencies[planet]; // alternatively display frequency
+          let distance = getDistanceKM(planet).toFixed(3);
+          let distanceFormatted = numberWithCommas(distance);
+          makeFreqDisplay(planet, distanceFormatted);
         }
 
         // update oscillator values
