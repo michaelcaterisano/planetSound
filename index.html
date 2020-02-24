@@ -30,6 +30,7 @@
       }
       #planet-container {
         width: 33%;
+        margin-bottom: 20px;
       }
       tone-play-toggle {
         width: 100%;
@@ -40,7 +41,10 @@
         width: 100%;
       }
       .frequency-label {
+        display: flex;
+        font-size: 9px;
         width: 100%;
+        justify-content: center;
         overflow: hidden;
         text-overflow: ellipsis;
       }
@@ -100,19 +104,20 @@
     </tone-content>
 
     <script type="text/javascript">
+      // VARS
+      let isPlaying = false;
       let loopToggleId = null;
       let y2k = new Date(2000, 0, 1);
       let today = new Date();
 
       // intialize date
       let days = daysSince(y2k, today);
-      let isPlaying = false;
-      let dateNode = document.querySelector("#date");
-      dateNode.innerText = `Year: ${today.getFullYear()} Month: ${today.getMonth() +
-        1} Day: ${today.getDate()}`;
+      let dateNode = (document.querySelector(
+        "#date"
+      ).innerText = `Year: ${today.getFullYear()} Month: ${today.getMonth() +
+        1} Day: ${today.getDate()}`);
 
       // HELPER FUNCTIONS
-
       function daysSince(date1, date2) {
         //Get 1 day in milliseconds
         var one_day = 1000 * 60 * 60 * 24;
@@ -127,6 +132,7 @@
         // Convert back to days and return
         return difference_ms / one_day;
       }
+
       function makeChannel(name, osc) {
         const channel = new Tone.Channel({ volume: -25 }).toMaster();
         osc.chain(channel);
@@ -135,8 +141,13 @@
       }
 
       function makeFreqDisplay(name, frequency) {
+        if (name === "earth") {
+          let node = document.querySelector(`#${name}`);
+          node.innerText = `distance: ${frequency} km`;
+          return;
+        }
         let node = document.querySelector(`#${name}`);
-        node.innerText = `${frequency}`;
+        node.innerText = `distance: ${frequency} Bil. km`;
       }
 
       function updateFrequencies() {
@@ -152,8 +163,9 @@
         const planetNames = Object.keys(frequencies);
         for (let i = 0; i < planetNames.length; i++) {
           let planet = planetNames[i];
-          let frequency = frequencies[planet];
-          makeFreqDisplay(planet, frequency);
+          //let frequency = frequencies[planet];
+          let distance = getDistanceKM(planet);
+          makeFreqDisplay(planet, distance);
         }
         earthOscillator.frequency.value = frequencies["earth"];
         mercuryOscillator.frequency.value = frequencies["mercury"];

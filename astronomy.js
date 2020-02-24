@@ -2255,6 +2255,18 @@ const NEPTUNE_MAX = 4700000000;
 const HZ_MIN = 100;
 const HZ_MAX = 4800;
 
+let planets = {
+  earth: 0,
+  mercury: null,
+  venus: null,
+  mars: null,
+  jupiter: null,
+  saturn: null,
+  uranus: null,
+  neptune: null,
+  sun: null
+};
+
 const Astronomy = new AstronomyClass();
 
 function scale(value, inMin, inMax, outMin, outMax) {
@@ -2292,7 +2304,7 @@ function getPlanetDistances(day) {
   const neptuneDistance = Astronomy.Neptune.DistanceFromEarth(day);
   const sunDistance = Astronomy.Sun.DistanceFromEarth(day);
 
-  const planets = {
+  planets = {
     earth: 0,
     mercury: mercuryDistance,
     venus: venusDistance,
@@ -2336,6 +2348,12 @@ function getFrequencies(manualDay) {
   return frequencies;
 }
 
-module.exports = {
-  getFrequencies: getFrequencies
-};
+function getDistanceKM(name) {
+  const distance = (AUtoKM(planets[name]) / 1000000000).toFixed(2);
+
+  return distance;
+}
+
+// module.exports = {
+//   getFrequencies: getFrequencies
+// };
