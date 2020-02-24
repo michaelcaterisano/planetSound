@@ -141,7 +141,7 @@
       // VARS
       let isPlaying = false;
       let loopToggleId = null;
-      let speedOfTime = 1;
+      let speedOfTime = null;
       let y2k = moment({ year: 2000, month: 1, day: 1 });
       let date = moment();
 
@@ -201,7 +201,11 @@
         //date = now;
 
         // move forward one day on each call
-        date.add(10 * speedOfTime, "milliseconds"); // alternatively move through time one day per function call
+        if (speedOfTime === null) {
+          date = moment();
+        } else {
+          date.add(10 * speedOfTime, "milliseconds"); // alternatively move through time one day per function call
+        }
 
         // update titleDate in UI
         document.querySelector("#date").innerText = `${date.format(
