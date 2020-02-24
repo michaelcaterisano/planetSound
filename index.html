@@ -100,11 +100,15 @@
     </tone-content>
 
     <script type="text/javascript">
+      let loopToggleId = null;
+
       // intialize date
       let days = 1;
+      let isPlaying = false;
       let y2k = new Date(2000, 0, 1);
       let dateNode = document.querySelector("#date");
       dateNode.innerText = y2k;
+
       // HELPER FUNCTIONS
       function makeChannel(name, osc) {
         const channel = new Tone.Channel({ volume: -25 }).toMaster();
@@ -204,9 +208,25 @@
       makeChannel("neptune", neptuneOscillator);
 
       // BIND THE TOGGLE BUTTON
-      document.querySelector("tone-play-toggle").bind(Tone.Transport);
 
-      setInterval(updateFrequencies, 10);
+      const toggle = document.querySelector("tone-play-toggle");
+      toggle.bind(Tone.Transport);
+
+      function togglePlaying(id) {
+        if (isPlaying) {
+          clearInterval(id);
+          isPlaying = false;
+          return;
+        } else {
+          loopToggleId = setInterval(updateFrequencies, 10);
+          isPlaying = true;
+        }
+      }
+
+      toggle.onclick = function(e) {
+        e.preventDefault();
+        togglePlaying(loopToggleId);
+      };
     </script>
   </body>
 </html>
