@@ -51,6 +51,8 @@
     </tone-content>
 
     <tone-content>
+      <div id="date"></div>
+
       <div id="channels-container">
         <tone-play-toggle></tone-play-toggle>
 
@@ -98,6 +100,11 @@
     </tone-content>
 
     <script type="text/javascript">
+      // intialize date
+      let days = 1;
+      let y2k = new Date(2000, 0, 1);
+      let dateNode = document.querySelector("#date");
+      dateNode.innerText = y2k;
       // HELPER FUNCTIONS
       function makeChannel(name, osc) {
         const channel = new Tone.Channel({ volume: -25 }).toMaster();
@@ -113,7 +120,14 @@
 
       function updateFrequencies() {
         // function imported from astronomy.js
-        let frequencies = getFrequencies();
+        let frequencies = getFrequencies(days);
+        // incremenet day
+        days += 1;
+        y2k.setDate(y2k.getDate() + 1);
+        document.querySelector(
+          "#date"
+        ).innerText = `Year: ${y2k.getFullYear()} Month: ${y2k.getMonth() +
+          1} Day: ${y2k.getDay()}`;
         const planetNames = Object.keys(frequencies);
         for (let i = 0; i < planetNames.length; i++) {
           let planet = planetNames[i];
