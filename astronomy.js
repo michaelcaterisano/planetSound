@@ -2252,8 +2252,8 @@ function GeographicCoordinates(
 // CUTLET CODE
 
 const NEPTUNE_MAX = 4700000000;
-const HZ_MIN = 440;
-const HZ_MAX = 3520;
+const HZ_MIN = 430;
+const HZ_MAX = 3440;
 
 let planets = {
   earth: 0,
@@ -2340,16 +2340,16 @@ function daysSince2000(date1, date2) {
 // PRINT PLANET DISTANCES
 
 // TODO:
-function getFrequencies(manualDay) {
+function getFrequencies(dayCount) {
   const y2k = new Date(2000, 0, 1);
   const today = new Date();
-  const days = daysSince2000(y2k, today);
-  const frequencies = getPlanetDistances(manualDay);
+  // const days = daysSince2000(y2k, today);
+  const frequencies = getPlanetDistances(dayCount);
   return frequencies;
 }
 
 function getDistanceKM(name) {
-  const distance = (AUtoKM(planets[name]) / 1000000000).toFixed(4);
+  const distance = AUtoKM(planets[name]);
 
   return distance;
 }
