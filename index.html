@@ -118,8 +118,7 @@
       let days = daysSince(y2k, date);
       let dateNode = (document.querySelector(
         "#date"
-      ).innerText = `Planet distances on ${date.getFullYear()}-${date.getMonth() +
-        1}-${date.getDate()}`);
+      ).innerText = `Planet distances on ${date.toDateString()}`);
 
       // HELPER FUNCTIONS
       function daysSince(date1, date2) {
@@ -176,8 +175,7 @@
         // update date in UI
         document.querySelector(
           "#date"
-        ).innerText = `Planet distances on ${date.getFullYear()}-${date.getMonth() +
-          1}-${date.getDate()}`;
+        ).innerText = `Planet distances on ${date.toDateString()}`;
 
         // get array of planet names
         const planetNames = Object.keys(frequencies);
