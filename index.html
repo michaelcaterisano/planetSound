@@ -29,7 +29,8 @@
         max-width: 600px;
       }
       #date {
-        font-size: 30px;
+        display: flex;
+        font-size: 20px;
         margin: 20px;
       }
       #planet-container {
@@ -118,7 +119,7 @@
       let days = daysSince(y2k, date);
       let dateNode = (document.querySelector(
         "#date"
-      ).innerText = `Planet distances on ${date.toDateString()}`);
+      ).innerText = `Planet distances ${date.toDateString().slice(4)}`);
 
       // HELPER FUNCTIONS
       function daysSince(date1, date2) {
@@ -175,7 +176,7 @@
         // update date in UI
         document.querySelector(
           "#date"
-        ).innerText = `Planet distances on ${date.toDateString()}`;
+        ).innerText = `Planet distances ${date.toDateString().slice(4)}`;
 
         // get array of planet names
         const planetNames = Object.keys(frequencies);
