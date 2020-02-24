@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Oscillator</title>
+    <title>PlanetSound</title>
 
     <meta
       name="viewport"
@@ -167,12 +167,7 @@
       }
       function updateFrequencyDisplay(name, frequency) {
         let node = document.querySelector(`#${name}-frequency`);
-        if (name === "earth") {
-          node.innerText = "430.00 Hz";
-          return;
-        } else {
-          node.innerText = `${frequency.toFixed(10)} Hz`;
-        }
+        node.innerText = `${frequency.toFixed(10)} Hz`;
       }
       function togglePlaying(id) {
         if (isPlaying) {
@@ -220,6 +215,7 @@
 
         // update oscillator values
         earthOscillator.frequency.value = frequencies["earth"];
+        console.log(frequencies["earth"]);
         mercuryOscillator.frequency.value = frequencies["mercury"];
         venusOscillator.frequency.value = frequencies["venus"];
         sunOscillator.frequency.value = frequencies["sun"];
