@@ -13,6 +13,7 @@
     <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
     <script src="node_modules/tone/build/Tone.js"></script>
     <script src="node_modules/@tonejs/ui/build/tonejs-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
     <script src="astronomy.js"></script>
     <style type="text/css">
       tone-play-toggle {
@@ -28,11 +29,10 @@
         justify-content: space-around;
         max-width: 600px;
       }
-      #date {
-        display: flex;
-        font-size: 20px;
-        margin: 20px;
+      #date-container {
+        text-align: center;
       }
+
       #planet-container {
         width: 33%;
         margin-bottom: 20px;
@@ -53,6 +53,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
+      tone-slider {
+        width: 100%;
+        margin-bottom: 10px;
+      }
     </style>
     <tone-content>
       <!-- <div id="mercury"></div> -->
@@ -60,46 +64,65 @@
     </tone-content>
 
     <tone-content>
+      <div id="date-container">
+        <span>Planet distances from Earth on </span><br />
+        <strong><span id="date"></span></strong><br />
+        <span> represented as sound from 430Hz to 3520Hz</span>
+      </div>
       <div id="channels-container">
-        <div id="date"></div>
-
         <tone-play-toggle></tone-play-toggle>
+        <tone-slider
+          label="speed of time"
+          min="1"
+          max="10000000"
+          value="1"
+        ></tone-slider>
 
         <div id="planet-container">
-          <div id="earth" class="frequency-label"></div>
+          <div id="earth-distance" class="frequency-label"></div>
+          <div id="earth-frequency" class="frequency-label"></div>
 
           <tone-channel label="earth" id="earth-channel"></tone-channel>
         </div>
         <div id="planet-container">
-          <div id="mercury" class="frequency-label"></div>
+          <div id="mercury-distance" class="frequency-label"></div>
+          <div id="mercury-frequency" class="frequency-label"></div>
+
           <tone-channel label="mercury" id="mercury-channel"></tone-channel>
         </div>
         <div id="planet-container">
-          <div id="venus" class="frequency-label"></div>
+          <div id="venus-distance" class="frequency-label"></div>
+          <div id="venus-frequency" class="frequency-label"></div>
           <tone-channel label="venus" id="venus-channel"></tone-channel>
         </div>
         <div id="planet-container">
-          <div id="sun" class="frequency-label"></div>
+          <div id="sun-distance" class="frequency-label"></div>
+          <div id="sun-frequency" class="frequency-label"></div>
           <tone-channel label="sun" id="sun-channel"></tone-channel>
         </div>
         <div id="planet-container">
-          <div id="mars" class="frequency-label"></div>
+          <div id="mars-distance" class="frequency-label"></div>
+          <div id="mars-frequency" class="frequency-label"></div>
           <tone-channel label="mars" id="mars-channel"></tone-channel>
         </div>
         <div id="planet-container">
-          <div id="jupiter" class="frequency-label"></div>
+          <div id="jupiter-distance" class="frequency-label"></div>
+          <div id="jupiter-frequency" class="frequency-label"></div>
           <tone-channel label="jupiter" id="jupiter-channel"></tone-channel>
         </div>
         <div id="planet-container">
-          <div id="saturn" class="frequency-label"></div>
+          <div id="saturn-distance" class="frequency-label"></div>
+          <div id="saturn-frequency" class="frequency-label"></div>
           <tone-channel label="saturn" id="saturn-channel"></tone-channel>
         </div>
         <div id="planet-container">
-          <div id="uranus" class="frequency-label"></div>
+          <div id="uranus-distance" class="frequency-label"></div>
+          <div id="uranus-frequency" class="frequency-label"></div>
           <tone-channel label="uranus" id="uranus-channel"></tone-channel>
         </div>
         <div id="planet-container">
-          <div id="neptune" class="frequency-label"></div>
+          <div id="neptune-distance" class="frequency-label"></div>
+          <div id="neptune-frequency" class="frequency-label"></div>
           <tone-channel label="neptune" id="neptune-channel"></tone-channel>
         </div>
       </div>
@@ -112,82 +135,87 @@
       // VARS
       let isPlaying = false;
       let loopToggleId = null;
-      let y2k = new Date(2000, 0, 1);
-      let date = new Date();
+      let speedOfTime = 1;
+      let y2k = moment({ year: 2000, month: 1, day: 1 });
+      let date = moment();
 
-      // intialize date
+      // intialize date in UI
       let days = daysSince(y2k, date);
-      let dateNode = (document.querySelector(
-        "#date"
-      ).innerText = `Planet distances ${date.toDateString().slice(4)}`);
+      let titleDate = document.querySelector("#date");
+      titleDate.innerText = `${date.format("MMM DD YYYY")}`;
 
-      // HELPER FUNCTIONS
+      // FUNCTIONS
       function daysSince(date1, date2) {
-        //Get 1 day in milliseconds
-        var one_day = 1000 * 60 * 60 * 24;
-
-        // Convert both dates to milliseconds
-        var date1_ms = date1.getTime();
-        var date2_ms = date2.getTime();
-
-        // Calculate the difference in milliseconds
-        var difference_ms = date2_ms - date1_ms;
-
-        // Convert back to days and return
-        return difference_ms / one_day;
+        var ms_in_one_day = 1000 * 60 * 60 * 24;
+        var difference_ms = date2 - date1;
+        return difference_ms / ms_in_one_day;
       }
 
       function makeChannel(name, osc) {
         const channel = new Tone.Channel({ volume: -25 }).toMaster();
         osc.chain(channel);
-        //bind the UI
         document.querySelector(`#${name}-channel`).bind(channel);
       }
 
-      function numberWithCommas(x) {
-        console.log(x);
+      function getNumberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
 
-      function makeFreqDisplay(name, frequency) {
-        // if (name === "earth") {
-        //   let node = document.querySelector(`#${name}`);
-        //   node.innerText = `${frequency} km`;
-        //   return;
-        // }f
-        let node = document.querySelector(`#${name}`);
-        node.innerText = `${frequency} km`;
+      function updateDistanceDisplay(name, distance) {
+        let node = document.querySelector(`#${name}-distance`);
+        node.innerText = `${distance} km`;
+      }
+      function updateFrequencyDisplay(name, frequency) {
+        let node = document.querySelector(`#${name}-frequency`);
+        if (name === "earth") {
+          node.innerText = "430.00 Hz";
+          return;
+        } else {
+          node.innerText = `${frequency.toFixed(10)} Hz`;
+        }
+      }
+      function togglePlaying(id) {
+        if (isPlaying) {
+          clearInterval(id);
+          isPlaying = false;
+          return;
+        } else {
+          loopToggleId = setInterval(updateFrequencies, 10);
+          isPlaying = true;
+        }
       }
 
-      /*** THE MEAT ***/
+      /*** UPDATE function ***/
       function updateFrequencies() {
+        document.querySelector("tone-slider").addEventListener("change", e => {
+          speedOfTime = e.detail;
+          console.log(speedOfTime);
+        });
         let frequencies = getFrequencies(days);
         days = daysSince(y2k, date);
 
         /*** CONTROL SPEED THROUGH TIME HERE ***/
+        // move to current time on each call
+        // let now = moment();
+        //date = now;
 
-        //normal speed
-        let now = new Date();
-        date = now;
+        // move forward one day on each call
+        date.add(10 * speedOfTime, "milliseconds"); // alternatively move through time one day per function call
 
-        // fast
-        // date.setDate(date.getDate() + 1); // alternatively move through time one day per function call
+        // update titleDate in UI
+        document.querySelector("#date").innerText = `${date.format(
+          "MMM DD YYYY HH:mm:ss:SS"
+        )}`;
 
-        // update date in UI
-        document.querySelector(
-          "#date"
-        ).innerText = `Planet distances ${date.toDateString().slice(4)}`;
-
-        // get array of planet names
+        // update planet distances in UI
         const planetNames = Object.keys(frequencies);
-
-        // update each planet distance in UI
         for (let i = 0; i < planetNames.length; i++) {
           let planet = planetNames[i];
-          //let frequency = frequencies[planet]; // alternatively display frequency
+          let frequency = frequencies[planet]; // alternatively display frequency
           let distance = getDistanceKM(planet).toFixed(3);
-          let distanceFormatted = numberWithCommas(distance);
-          makeFreqDisplay(planet, distanceFormatted);
+          let distanceFormatted = getNumberWithCommas(distance);
+          updateDistanceDisplay(planet, distanceFormatted);
+          updateFrequencyDisplay(planet, frequency);
         }
 
         // update oscillator values
@@ -260,22 +288,11 @@
       makeChannel("uranus", uranusOscillator);
       makeChannel("neptune", neptuneOscillator);
 
-      // BIND THE TOGGLE BUTTON
+      // bind toggle button to UI
       const toggle = document.querySelector("tone-play-toggle");
       toggle.bind(Tone.Transport);
 
-      function togglePlaying(id) {
-        if (isPlaying) {
-          clearInterval(id);
-          isPlaying = false;
-          return;
-        } else {
-          loopToggleId = setInterval(updateFrequencies, 10);
-          isPlaying = true;
-        }
-      }
-
-      // set play button onclick handler
+      // bind click handler
       toggle.onclick = function(e) {
         e.preventDefault();
         togglePlaying(loopToggleId);
