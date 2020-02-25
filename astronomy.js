@@ -2252,8 +2252,8 @@ function GeographicCoordinates(
 // CUTLET CODE
 
 const NEPTUNE_MAX = 4700000000;
-const HZ_MIN = 430;
-const HZ_MAX = 3440;
+const HZ_MIN = 110;
+const HZ_MAX = 3520;
 
 let planets = {
   earth: 0,

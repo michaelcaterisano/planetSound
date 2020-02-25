@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8" />
     <title>PlanetSound</title>
-
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1"
@@ -58,45 +57,36 @@
         margin-bottom: 10px;
       }
     </style>
-    <tone-content>
-      <!-- <div id="mercury"></div> -->
-      <!-- <div id="venus"></div> -->
-    </tone-content>
 
     <tone-content>
       <tone-explanation label="Planet Sound">
         Planet distances from Earth on <br />
         <strong><span id="date"></span></strong><br />
-        represented as sound from 430Hz to 3440Hz<br /><br />
+        represented as sound from <span id="hz-min"></span> to
+        <span id="hz-max"></span><br /><br />
 
         Use the slider to increase the speed of time <br /><br />
         Built by Michael Caterisano using
         <a href="https://tonejs.github.io/">tone.js</a>,
         <a href="https://github.com/Tonejs/ui">tone.js/ui</a> and
-        <a href="http://cosinekitty.com/astronomy.js"
-          >astronomy.js</a
-        > </tone-explanation
-      ><br />
+        <a href="http://cosinekitty.com/astronomy.js">astronomy.js</a>
+      </tone-explanation>
+
+      <br />
 
       <div id="channels-container">
         <tone-play-toggle></tone-play-toggle>
-        <tone-slider
-          label="speed of time"
-          min="1"
-          max="10000000"
-          value="1"
-        ></tone-slider>
+        <tone-slider label="speed of time" min="1" max="10000000" value="1">
+        </tone-slider>
 
         <div id="planet-container">
           <div id="earth-distance" class="frequency-label"></div>
           <div id="earth-frequency" class="frequency-label"></div>
-
           <tone-channel label="earth" id="earth-channel"></tone-channel>
         </div>
         <div id="planet-container">
           <div id="mercury-distance" class="frequency-label"></div>
           <div id="mercury-frequency" class="frequency-label"></div>
-
           <tone-channel label="mercury" id="mercury-channel"></tone-channel>
         </div>
         <div id="planet-container">
@@ -135,9 +125,6 @@
           <tone-channel label="neptune" id="neptune-channel"></tone-channel>
         </div>
       </div>
-
-      <!-- <tone-channel label="mercury" id="mercury"></tone-channel>
-      <tone-channel label="venus" id="venus"></tone-channel> -->
     </tone-content>
 
     <script type="text/javascript">
@@ -147,9 +134,14 @@
       let speedOfTime = null;
       let y2k = moment({ year: 2000, month: 0, day: 0 });
       let date = moment();
-
-      // intialize date in UI
       let days = daysSince(y2k, date);
+      let hzMin = document.querySelector("#hz-min");
+      let hzMax = document.querySelector("#hz-max");
+
+      hzMin.innerText = HZ_MIN + " Hz";
+      hzMax.innerText = HZ_MAX + " Hz";
+
+      // init titleDate
       let titleDate = document.querySelector("#date");
       titleDate.innerText = `${date.format("MMM DD YYYY")}`;
 
@@ -225,7 +217,6 @@
           updateDistanceDisplay(planet, distanceFormatted);
           updateFrequencyDisplay(planet, frequency);
         }
-
         // update oscillator values
         earthOscillator.frequency.value = frequencies["earth"];
         mercuryOscillator.frequency.value = frequencies["mercury"];
@@ -296,11 +287,11 @@
       makeChannel("uranus", uranusOscillator);
       makeChannel("neptune", neptuneOscillator);
 
-      // bind toggle button to UI
+      // bind Tone.js transport toggle button to UI
       const toggle = document.querySelector("tone-play-toggle");
       toggle.bind(Tone.Transport);
 
-      // bind click handler
+      // bind togglePlaying function to ui
       toggle.onclick = function(e) {
         e.preventDefault();
         togglePlaying(loopToggleId);
