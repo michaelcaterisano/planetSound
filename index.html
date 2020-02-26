@@ -153,8 +153,8 @@
         return difference_ms / ms_in_one_day;
       }
 
-      function makeChannel(name, osc) {
-        const channel = new Tone.Channel({ volume: -25 }).toMaster();
+      function makeChannel(name, osc, volume) {
+        const channel = new Tone.Channel({ volume: volume }).toMaster();
         osc.chain(channel);
         document.querySelector(`#${name}-channel`).bind(channel);
       }
@@ -277,15 +277,15 @@
         .start(0);
 
       // CREATE THE CHANNELS
-      makeChannel("earth", earthOscillator);
-      makeChannel("mercury", mercuryOscillator);
-      makeChannel("venus", venusOscillator);
-      makeChannel("sun", sunOscillator);
-      makeChannel("mars", marsOscillator);
-      makeChannel("jupiter", jupiterOscillator);
-      makeChannel("saturn", saturnOscillator);
-      makeChannel("uranus", uranusOscillator);
-      makeChannel("neptune", neptuneOscillator);
+      makeChannel("earth", earthOscillator, -20);
+      makeChannel("mercury", mercuryOscillator, -25);
+      makeChannel("venus", venusOscillator, -25);
+      makeChannel("sun", sunOscillator, -25);
+      makeChannel("mars", marsOscillator, -25);
+      makeChannel("jupiter", jupiterOscillator, -28);
+      makeChannel("saturn", saturnOscillator, -28);
+      makeChannel("uranus", uranusOscillator, -29);
+      makeChannel("neptune", neptuneOscillator, -33);
 
       // bind Tone.js transport toggle button to UI
       const toggle = document.querySelector("tone-play-toggle");
