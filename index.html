@@ -138,39 +138,62 @@
       let hzMin = document.querySelector("#hz-min");
       let hzMax = document.querySelector("#hz-max");
 
-      hzMin.innerText = HZ_MIN + " Hz";
-      hzMax.innerText = HZ_MAX + " Hz";
+      const NEPTUNE_MAX = 4700000000;
+      const HZ_MIN = 430;
+      const HZ_MAX = 3440;
+      let planets = {
+        earth: 0,
+        mercury: null,
+        venus: null,
+        mars: null,
+        jupiter: null,
+        saturn: null,
+        uranus: null,
+        neptune: null,
+        sun: null
+      };
 
-      // init titleDate
+      const Astronomy = new AstronomyClass();
+
+      // init UI
       let titleDate = document.querySelector("#date");
       titleDate.innerText = `${date.format("MMM DD YYYY")}`;
 
+      hzMin.innerText = HZ_MIN + " Hz";
+      hzMax.innerText = HZ_MAX + " Hz";
+
       // FUNCTIONS
+      //-----------------------------------------------------------------------
       function daysSince(date1, date2) {
         var ms_in_one_day = 1000 * 60 * 60 * 24;
         var difference_ms = date2 - date1;
         console.log(difference_ms / ms_in_one_day);
         return difference_ms / ms_in_one_day;
       }
-
+      //-----------------------------------------------------------------------
       function makeChannel(name, osc, volume) {
         const channel = new Tone.Channel({ volume: volume }).toMaster();
         osc.chain(channel);
         document.querySelector(`#${name}-channel`).bind(channel);
       }
-
+      //-----------------------------------------------------------------------
       function getNumberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
 
+      //-----------------------------------------------------------------------
       function updateDistanceDisplay(name, distance) {
         let node = document.querySelector(`#${name}-distance`);
         node.innerText = `${distance} km`;
       }
+
+      //-----------------------------------------------------------------------
       function updateFrequencyDisplay(name, frequency) {
         let node = document.querySelector(`#${name}-frequency`);
         node.innerText = `${frequency.toFixed(10)} Hz`;
       }
+
+      //-----------------------------------------------------------------------
       function togglePlaying(id) {
         if (isPlaying) {
           clearInterval(id);
@@ -181,8 +204,88 @@
           isPlaying = true;
         }
       }
+      //-----------------------------------------------------------------------
+      function scale(value, inMin, inMax, outMin, outMax) {
+        return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+      }
+      //-----------------------------------------------------------------------
+      function AUtoKM(au) {
+        return au * 149597900;
+      }
+      //-----------------------------------------------------------------------
+      function objectMap(object, mapFn) {
+        return Object.keys(object).reduce(function(result, key) {
+          result[key] = mapFn(object[key]);
+          return result;
+        }, {});
+      }
+      //-----------------------------------------------------------------------
+      function getFrequency(distance) {
+        const distanceKM = AUtoKM(distance);
+        return scale(distanceKM, 0, NEPTUNE_MAX, HZ_MIN, HZ_MAX);
+      }
+      //-----------------------------------------------------------------------
+      function getPlanetFrequencies(planets) {
+        const planetFrequencies = objectMap(planets, getFrequency);
+        return planetFrequencies;
+      }
+      //-----------------------------------------------------------------------
+      function getPlanetDistances(day) {
+        const mercuryDistance = Astronomy.Mercury.DistanceFromEarth(day);
+        const venusDistance = Astronomy.Venus.DistanceFromEarth(day);
+        const marsDistance = Astronomy.Mars.DistanceFromEarth(day);
+        const jupiterDistance = Astronomy.Jupiter.DistanceFromEarth(day);
+        const saturnDistance = Astronomy.Saturn.DistanceFromEarth(day);
+        const uranusDistance = Astronomy.Uranus.DistanceFromEarth(day);
+        const neptuneDistance = Astronomy.Neptune.DistanceFromEarth(day);
+        const sunDistance = Astronomy.Sun.DistanceFromEarth(day);
 
-      /*** UPDATE function ***/
+        planets = {
+          earth: 0,
+          mercury: mercuryDistance,
+          venus: venusDistance,
+          mars: marsDistance,
+          jupiter: jupiterDistance,
+          saturn: saturnDistance,
+          uranus: uranusDistance,
+          neptune: neptuneDistance,
+          sun: sunDistance
+        };
+
+        const planetDistancesKM = getPlanetFrequencies(planets);
+        return planetDistancesKM;
+      }
+      //-----------------------------------------------------------------------
+      function daysSince2000(date1, date2) {
+        //Get 1 day in milliseconds
+        var one_day = 1000 * 60 * 60 * 24;
+
+        // Convert both dates to milliseconds
+        var date1_ms = date1.getTime();
+        var date2_ms = date2.getTime();
+
+        // Calculate the difference in milliseconds
+        var difference_ms = date2_ms - date1_ms;
+
+        // Convert back to days and return
+        return difference_ms / one_day;
+      }
+      //-----------------------------------------------------------------------
+      function getFrequencies(dayCount) {
+        const y2k = new Date(2000, 0, 1);
+        const today = new Date();
+        // const days = daysSince2000(y2k, today);
+        const frequencies = getPlanetDistances(dayCount);
+        return frequencies;
+      }
+      //-----------------------------------------------------------------------
+      function getDistanceKM(name) {
+        const distance = AUtoKM(planets[name]);
+        console.log(`${name}: ${distance}`);
+        return distance;
+      }
+
+      //-----------------------------------------------------------------------
       function updateFrequencies() {
         document.querySelector("tone-slider").addEventListener("change", e => {
           speedOfTime = e.detail;
@@ -285,7 +388,7 @@
       makeChannel("jupiter", jupiterOscillator, -28);
       makeChannel("saturn", saturnOscillator, -28);
       makeChannel("uranus", uranusOscillator, -29);
-      makeChannel("neptune", neptuneOscillator, -33);
+      makeChannel("neptune", neptuneOscillator, -35);
 
       // bind Tone.js transport toggle button to UI
       const toggle = document.querySelector("tone-play-toggle");
